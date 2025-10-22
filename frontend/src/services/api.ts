@@ -77,6 +77,31 @@ export const gitAPI = {
   pull: async (remote: string = 'origin', branch: string = 'main'): Promise<void> => {
     await api.post('/git/pull', { remote, branch });
   },
+
+  getCurrentBranch: async (): Promise<string> => {
+    const { data } = await api.get<ApiResponse<string>>('/git/branch');
+    return data.data || 'main';
+  },
+
+  getBranches: async (): Promise<string[]> => {
+    const { data } = await api.get<ApiResponse<string[]>>('/git/branches');
+    return data.data || [];
+  },
+
+  createBranch: async (name: string): Promise<void> => {
+    await api.post('/git/branch', { name, action: 'create' });
+  },
+
+  switchBranch: async (name: string): Promise<void> => {
+    await api.post('/git/branch', { name, action: 'switch' });
+  },
+
+  getHistory: async (limit: number = 10): Promise<any[]> => {
+    const { data } = await api.get<ApiResponse<any[]>>('/git/history', {
+      params: { limit },
+    });
+    return data.data || [];
+  },
 };
 
 // Package Operations
@@ -90,8 +115,19 @@ export const packageAPI = {
     await api.post('/packages/install', { packageName, manager });
   },
 
-  getTree: async (): Promise<any> => {
-    const { data } = await api.get<ApiResponse<any>>('/packages/tree');
+  getTree: async (manager?: string): Promise<any> => {
+    const { data } = await api.get<ApiResponse<any>>('/packages/tree', {
+      params: { manager },
+    });
+    return data.data;
+  },
+
+  update: async (manager: string = 'npm'): Promise<void> => {
+    await api.post('/packages/update', { manager });
+  },
+
+  detectManager: async (): Promise<string | null> => {
+    const { data } = await api.get<ApiResponse<string | null>>('/packages/manager');
     return data.data;
   },
 };
@@ -103,8 +139,13 @@ export const securityAPI = {
     return data.data || [];
   },
 
-  fix: async (vulnerabilityId: string): Promise<void> => {
-    await api.post('/security/fix', { vulnerabilityId });
+  fix: async (vulnerabilityId: string, manager: string = 'npm'): Promise<void> => {
+    await api.post('/security/fix', { vulnerabilityId, manager });
+  },
+
+  getCVE: async (cveId: string): Promise<any> => {
+    const { data } = await api.get<ApiResponse<any>>(`/security/cve/${cveId}`);
+    return data.data;
   },
 };
 

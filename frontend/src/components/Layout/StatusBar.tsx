@@ -1,11 +1,19 @@
 import { useEditorStore } from '../../stores/editorStore';
 import { useChatStore } from '../../stores/chatStore';
+import { useQuery } from '@tanstack/react-query';
+import { gitAPI } from '../../services/api';
 import { Activity, GitBranch, Zap } from 'lucide-react';
 
 export default function StatusBar() {
   const activeTabId = useEditorStore((state) => state.activeTabId);
   const tabs = useEditorStore((state) => state.tabs);
   const isStreaming = useChatStore((state) => state.isStreaming);
+
+  const { data: currentBranch } = useQuery({
+    queryKey: ['git-branch'],
+    queryFn: () => gitAPI.getCurrentBranch(),
+    refetchInterval: 30000, // Refresh every 30 seconds
+  });
 
   const activeTab = tabs.find(t => t.id === activeTabId);
 
@@ -14,7 +22,7 @@ export default function StatusBar() {
       {/* Git Branch */}
       <div className="flex items-center gap-1">
         <GitBranch className="w-3 h-3" />
-        <span>main</span>
+        <span>{currentBranch || 'main'}</span>
       </div>
 
       <div className="w-px h-4 bg-border" />

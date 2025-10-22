@@ -1,5 +1,6 @@
 import axios from 'axios';
 import type { Socket, Server as SocketIOServer } from 'socket.io';
+import { executeTool, getToolDefinitions, validateToolCall, type ToolCall } from '../tools/aiTools.js';
 
 const OLLAMA_URL = process.env.OLLAMA_URL || 'http://localhost:11434';
 const DEFAULT_MODEL = process.env.OLLAMA_MODEL || 'qwen2.5-coder:7b';
@@ -7,6 +8,7 @@ const DEFAULT_MODEL = process.env.OLLAMA_MODEL || 'qwen2.5-coder:7b';
 interface Message {
   role: 'system' | 'user' | 'assistant';
   content: string;
+  tool_calls?: ToolCall[];
 }
 
 export function setupOllamaHandlers(socket: Socket, io: SocketIOServer) {
@@ -23,6 +25,14 @@ export function setupOllamaHandlers(socket: Socket, io: SocketIOServer) {
         },
       ];
 
+      // Check if the message contains tool requests
+      const toolDefinitions = getToolDefinitions();
+      const toolsPrompt = `\n\nAvailable tools:\n${toolDefinitions.map(tool => 
+        `- ${tool.name}: ${tool.description}`
+      ).join('\n')}\n\nTo use a tool, respond with: TOOL_CALL: {"name": "tool_name", "parameters": {...}}`;
+
+      messages[1].content += toolsPrompt;
+
       // Stream response from Ollama
       const response = await axios.post(
         `${OLLAMA_URL}/api/chat`,
@@ -36,7 +46,10 @@ export function setupOllamaHandlers(socket: Socket, io: SocketIOServer) {
         }
       );
 
-      response.data.on('data', (chunk: Buffer) => {
+      let fullResponse = '';
+      let toolCallBuffer = '';
+
+      response.data.on('data', async (chunk: Buffer) => {
         const lines = chunk.toString().split('\n').filter(line => line.trim());
         
         for (const line of lines) {
@@ -44,10 +57,49 @@ export function setupOllamaHandlers(socket: Socket, io: SocketIOServer) {
             const json = JSON.parse(line);
             
             if (json.message?.content) {
-              socket.emit('chat:stream', {
-                id: data.id,
-                chunk: json.message.content,
-              });
+              const content = json.message.content;
+              fullResponse += content;
+              
+              // Check for tool calls
+              if (content.includes('TOOL_CALL:')) {
+                toolCallBuffer += content;
+                
+                // Try to extract complete tool call
+                const toolCallMatch = toolCallBuffer.match(/TOOL_CALL:\s*(\{.*?\})/s);
+                if (toolCallMatch) {
+                  try {
+                    const toolCallData = JSON.parse(toolCallMatch[1]);
+                    const toolCall: ToolCall = {
+                      id: `tool-${Date.now()}`,
+                      name: toolCallData.name,
+                      parameters: toolCallData.parameters,
+                      status: 'pending',
+                    };
+                    
+                    if (validateToolCall(toolCall)) {
+                      socket.emit('tool:start', toolCall);
+                      
+                      // Execute the tool
+                      const result = await executeTool(toolCall);
+                      socket.emit('tool:complete', result);
+                      
+                      // Send tool result back to AI
+                      const toolResultMessage = `Tool ${toolCall.name} executed successfully. Result: ${JSON.stringify(result.result)}`;
+                      fullResponse += `\n\n${toolResultMessage}`;
+                    }
+                    
+                    toolCallBuffer = '';
+                  } catch (parseError) {
+                    // Continue buffering if JSON is incomplete
+                  }
+                }
+              } else {
+                // Send regular content
+                socket.emit('chat:stream', {
+                  id: data.id,
+                  chunk: content,
+                });
+              }
             }
             
             if (json.done) {

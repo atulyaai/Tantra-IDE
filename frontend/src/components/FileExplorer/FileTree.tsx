@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { fileAPI } from '../../services/api';
+import { fileAPI, gitAPI } from '../../services/api';
 import { useFileStore } from '../../stores/fileStore';
 import { useEditorStore } from '../../stores/editorStore';
 import FileNode from './FileNode';
@@ -17,11 +17,35 @@ export default function FileTree() {
     refetchInterval: 5000, // Refresh every 5 seconds
   });
 
+  const { data: gitStatus } = useQuery({
+    queryKey: ['git-status'],
+    queryFn: () => gitAPI.status(),
+    refetchInterval: 10000, // Refresh every 10 seconds
+  });
+
   useEffect(() => {
     if (data) {
-      setFileTree(data);
+      // Merge Git status with file tree
+      const mergeGitStatus = (nodes: any[]): any[] => {
+        return nodes.map(node => {
+          const gitChange = gitStatus?.find(change => change.path === node.path);
+          const updatedNode = {
+            ...node,
+            gitStatus: gitChange?.status || null,
+          };
+          
+          if (updatedNode.children) {
+            updatedNode.children = mergeGitStatus(updatedNode.children);
+          }
+          
+          return updatedNode;
+        });
+      };
+      
+      const treeWithGit = mergeGitStatus(data);
+      setFileTree(treeWithGit);
     }
-  }, [data, setFileTree]);
+  }, [data, gitStatus, setFileTree]);
 
   const handleFileClick = async (path: string, name: string) => {
     try {
