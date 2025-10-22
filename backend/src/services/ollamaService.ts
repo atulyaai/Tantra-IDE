@@ -14,6 +14,16 @@ interface Message {
 export function setupOllamaHandlers(socket: Socket, io: SocketIOServer) {
   socket.on('chat:message', async (data: { id: string; content: string; context?: any }) => {
     try {
+      // Validate input data
+      if (!data.id || !data.content) {
+        socket.emit('chat:error', { id: data.id, error: 'Missing required fields: id and content' });
+        return;
+      }
+
+      if (data.content.length > 10000) {
+        socket.emit('chat:error', { id: data.id, error: 'Message too long (max 10000 characters)' });
+        return;
+      }
       const messages: Message[] = [
         {
           role: 'system',

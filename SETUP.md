@@ -1,18 +1,36 @@
-# Tantra IDE - Setup Guide
+# 🚀 Tantra IDE - Setup & Installation Guide
 
-## Prerequisites Installation
+## Prerequisites
+
+### Required Software
+
+| Software | Version | Download Link | Purpose |
+|----------|---------|---------------|---------|
+| **Node.js** | 18+ | [nodejs.org](https://nodejs.org/) | JavaScript runtime |
+| **npm** | 9+ | Comes with Node.js | Package manager |
+| **Ollama** | Latest | [ollama.com](https://ollama.com/) | Local LLM inference |
+
+### Optional Software
+
+| Software | Purpose | Installation |
+|----------|---------|--------------|
+| **Git** | Version control features | Usually pre-installed |
+| **Ripgrep** | Faster code search | `choco install ripgrep` (Windows) |
+
+## Installation Steps
 
 ### 1. Install Node.js and npm
 
-**Windows**:
+**Windows (Recommended)**:
 ```powershell
-# Download and install from: https://nodejs.org/
-# Or use Chocolatey:
-choco install nodejs
+# Download from: https://nodejs.org/
+# Choose LTS version (18.x or higher)
+# Run installer with default settings
+# Restart terminal/PowerShell
 
 # Verify installation:
-node --version  # Should show v18 or higher
-npm --version   # Should show v9 or higher
+node --version  # Should show v18.x or higher
+npm --version   # Should show v9.x or higher
 ```
 
 **macOS**:
@@ -33,23 +51,19 @@ sudo apt-get install -y nodejs
 sudo dnf install nodejs
 ```
 
-### 2. Install Ollama (for AI features)
+### 2. Install Ollama
 
 **Windows**:
 ```powershell
 # Download from: https://ollama.com/download
 # Run the installer
-
-# Verify:
-ollama --version
+# Verify: ollama --version
 ```
 
 **macOS**:
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
-
-# Or use Homebrew:
-brew install ollama
+# Or: brew install ollama
 ```
 
 **Linux**:
@@ -71,39 +85,14 @@ ollama pull deepseek-coder:6.7b
 ollama pull codellama:7b-instruct
 ```
 
-### 4. Optional Tools
-
-**Ripgrep** (for faster code search):
-```bash
-# Windows (Chocolatey):
-choco install ripgrep
-
-# macOS:
-brew install ripgrep
-
-# Linux:
-sudo apt install ripgrep
-```
-
-**Git** (for version control features):
-```bash
-# Usually pre-installed, verify with:
-git --version
-```
-
-## Installation Steps
-
-### 1. Clone Repository
+### 4. Clone and Install Tantra IDE
 
 ```bash
+# Clone repository
 git clone https://github.com/atulyaai/Tantra-IDE
 cd Tantra-IDE
-```
 
-### 2. Install Dependencies
-
-```bash
-# Install all dependencies (root + frontend + backend)
+# Install all dependencies
 npm install
 
 # Or install separately:
@@ -112,7 +101,7 @@ cd frontend && npm install
 cd ../backend && npm install
 ```
 
-### 3. Configure Environment
+### 5. Configure Environment
 
 **Backend** (create `backend/.env`):
 ```env
@@ -129,7 +118,7 @@ VITE_API_URL=http://localhost:3001
 VITE_WS_URL=ws://localhost:3001
 ```
 
-### 4. Create Workspace Directory
+### 6. Create Workspace Directory
 
 ```bash
 mkdir workspace
@@ -137,11 +126,11 @@ cd workspace
 # This is where your projects will be opened
 ```
 
-## Running the IDE
+## Running Tantra IDE
 
 ### Development Mode
 
-**Option 1: Run both frontend and backend together** (recommended):
+**Option 1: Run both together** (recommended):
 ```bash
 npm run dev
 ```
@@ -161,29 +150,44 @@ npm run dev
 
 Navigate to: **http://localhost:5173**
 
-## Verify Everything Works
+## Verification Checklist
 
-1. **Check Ollama Connection**:
-   - Open Tantra IDE
-   - Look at status bar (bottom) - should show "Ollama Connected"
+### ✅ Core Features
+- [ ] **File Explorer**: File tree loads and displays project files
+- [ ] **Monaco Editor**: Opens files with syntax highlighting
+- [ ] **Terminal**: Integrated terminal accepts commands
+- [ ] **Status Bar**: Shows Git branch and Ollama connection status
 
-2. **Test File Explorer**:
-   - Left sidebar should show file tree
-   - Try opening a file
+### ✅ AI Features
+- [ ] **Chat Panel**: AI responds to messages
+- [ ] **Code Generation**: AI generates code from prompts
+- [ ] **Tool Calling**: AI can read/write files through function calls
 
-3. **Test Editor**:
-   - File should open in Monaco editor
-   - Try editing and saving (Ctrl+S / Cmd+S)
-
-4. **Test AI Chat**:
-   - Right sidebar - type a message
-   - AI should respond
-
-5. **Test Terminal**:
-   - Bottom panel - should show terminal
-   - Try running commands
+### ✅ Development Tools
+- [ ] **Git Integration**: Shows git status and changes
+- [ ] **Package Management**: Detects and manages dependencies
+- [ ] **Security Scanning**: Scans for vulnerabilities
+- [ ] **Live Search**: Searches Stack Overflow, GitHub, npm
 
 ## Troubleshooting
+
+### Common Issues
+
+**Issue**: "npm is not recognized"
+- **Solution**: Install Node.js from https://nodejs.org/
+
+**Issue**: "Ollama model not found"
+- **Solution**: Run `ollama pull qwen2.5-coder:7b`
+
+**Issue**: "Port already in use"
+- **Solution**: Change ports in .env files or kill existing processes
+
+**Issue**: "File watching limit exceeded" (Linux)
+- **Solution**: 
+```bash
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf
+sudo sysctl -p
+```
 
 ### Ollama Not Connecting
 
@@ -198,14 +202,6 @@ ollama serve
 curl http://localhost:11434/api/tags
 ```
 
-### Port Already in Use
-
-```bash
-# Change ports in .env files:
-# Backend: PORT=3002
-# Frontend: VITE_API_URL=http://localhost:3002
-```
-
 ### Dependencies Installation Failed
 
 ```bash
@@ -215,20 +211,6 @@ rm -rf node_modules package-lock.json
 rm -rf frontend/node_modules frontend/package-lock.json
 rm -rf backend/node_modules backend/package-lock.json
 npm install
-```
-
-### Terminal Not Working
-
-**Windows**: Ensure PowerShell is installed and accessible
-
-**macOS/Linux**: Ensure bash is available
-
-### File Watching Issues
-
-```bash
-# Increase file watchers limit (Linux):
-echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf
-sudo sysctl -p
 ```
 
 ## Building for Production
@@ -245,6 +227,15 @@ cd ../backend && npm run build
 cd backend && npm start
 ```
 
+## Performance Expectations
+
+| Metric | Expected Value |
+|--------|----------------|
+| **Startup Time** | Backend ~2-3s, Frontend ~1-2s |
+| **AI Response Time** | 2-10s depending on model and task complexity |
+| **File Operations** | Near-instant for small files, <1s for large files |
+| **Memory Usage** | ~200-500MB for backend, ~100-300MB for frontend |
+
 ## Next Steps
 
 1. **Open a Project**: Click "Open Folder" or use the file tree
@@ -259,41 +250,6 @@ cd backend && npm start
 - **Issues**: https://github.com/atulyaai/Tantra-IDE/issues
 - **Discussions**: https://github.com/atulyaai/Tantra-IDE/discussions
 
-## Development
-
-### Adding New Features
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for contribution guidelines.
-
-### Project Structure
-
-```
-tantra-ide/
-├── frontend/       # React frontend
-├── backend/        # Express backend
-├── README.md       # Main documentation
-├── ROADMAP.md      # Development roadmap
-└── SETUP.md        # This file
-```
-
-### Available Scripts
-
-```bash
-# Development
-npm run dev              # Start both
-npm run dev:frontend     # Frontend only
-npm run dev:backend      # Backend only
-
-# Building
-npm run build            # Build both
-npm run build:frontend   # Frontend only
-npm run build:backend    # Backend only
-
-# Installation
-npm run install:all      # Install all dependencies
-```
-
 ---
 
-**Enjoy coding with Tantra IDE! 🚀**
-
+**🎉 Enjoy coding with Tantra IDE!**

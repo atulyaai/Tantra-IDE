@@ -36,16 +36,30 @@ export function setupTerminalHandlers(socket: Socket) {
   });
 
   socket.on('terminal:input', (data: { data: string }) => {
-    const term = terminals.get(socket.id);
-    if (term) {
-      term.write(data.data);
+    try {
+      const term = terminals.get(socket.id);
+      if (term) {
+        term.write(data.data);
+      } else {
+        socket.emit('terminal:error', { error: 'Terminal not found' });
+      }
+    } catch (error: any) {
+      console.error('[Terminal] Error handling input:', error);
+      socket.emit('terminal:error', { error: error.message });
     }
   });
 
   socket.on('terminal:resize', (data: { cols: number; rows: number }) => {
-    const term = terminals.get(socket.id);
-    if (term) {
-      term.resize(data.cols, data.rows);
+    try {
+      const term = terminals.get(socket.id);
+      if (term) {
+        term.resize(data.cols, data.rows);
+      } else {
+        socket.emit('terminal:error', { error: 'Terminal not found' });
+      }
+    } catch (error: any) {
+      console.error('[Terminal] Error resizing terminal:', error);
+      socket.emit('terminal:error', { error: error.message });
     }
   });
 

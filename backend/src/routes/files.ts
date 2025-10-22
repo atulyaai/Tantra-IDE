@@ -22,7 +22,17 @@ router.get('/read', async (req, res, next) => {
       return res.status(400).json({ success: false, error: 'Path is required' });
     }
     const content = await fileService.readFile(path);
-    res.json({ success: true, data: { path, content } });
+    const stats = await fileService.getFileStats(path);
+    res.json({ 
+      success: true, 
+      data: { 
+        path, 
+        content,
+        size: stats.size,
+        modified: stats.modified,
+        created: stats.created
+      } 
+    });
   } catch (error) {
     next(error);
   }

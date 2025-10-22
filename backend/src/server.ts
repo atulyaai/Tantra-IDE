@@ -4,7 +4,7 @@ import http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import dotenv from 'dotenv';
 
-// Routes
+// API Routes
 import filesRouter from './routes/files.js';
 import ollamaRouter from './routes/ollama.js';
 import gitRouter from './routes/git.js';
@@ -27,19 +27,19 @@ const app = express();
 const server = http.createServer(app);
 const io = new SocketIOServer(server, {
   cors: {
-    origin: '*',
+    origin: '*', // Allow all origins in development
     methods: ['GET', 'POST'],
   },
 });
 
 const PORT = process.env.PORT || 3001;
 
-// Middleware
-app.use(cors());
-app.use(express.json({ limit: '50mb' }));
+// Middleware configuration
+app.use(cors()); // Enable CORS for all routes
+app.use(express.json({ limit: '50mb' })); // Support large file uploads
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// API Routes
+// API Routes registration
 app.use('/api/files', filesRouter);
 app.use('/api/ollama', ollamaRouter);
 app.use('/api/git', gitRouter);
@@ -52,15 +52,15 @@ app.use('/api/performance', performanceRouter);
 app.use('/api/database', databaseRouter);
 app.use('/api/agent', agentRouter);
 
-// Health check
+// Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// WebSocket handlers
+// WebSocket connection handling
 io.on('connection', (socket) => {
   console.log(`[WebSocket] Client connected: ${socket.id}`);
-
+  
   // Setup handlers for different features
   setupTerminalHandlers(socket);
   setupOllamaHandlers(socket, io);
@@ -74,7 +74,7 @@ io.on('connection', (socket) => {
   });
 });
 
-// Error handling
+// Global error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error('[Error]', err);
   res.status(500).json({
@@ -83,7 +83,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   });
 });
 
-// Start server
+// Start server with detailed startup information
 server.listen(PORT, () => {
   console.log(`
 ╔════════════════════════════════════════╗
@@ -112,7 +112,7 @@ server.listen(PORT, () => {
   console.log('');
 });
 
-// Graceful shutdown
+// Graceful shutdown handling
 process.on('SIGTERM', () => {
   console.log('SIGTERM received, shutting down gracefully');
   server.close(() => {

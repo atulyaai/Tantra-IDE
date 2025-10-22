@@ -4,11 +4,12 @@ import MainLayout from './components/Layout/MainLayout.js';
 import { useSettingsStore } from './stores/settingsStore.js';
 import ollamaService from './services/ollama.js';
 
+// Configure React Query client with optimized defaults
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false,
-      retry: 1,
+      refetchOnWindowFocus: false, // Prevent unnecessary refetches
+      retry: 1, // Limit retry attempts
     },
   },
 });
@@ -16,18 +17,15 @@ const queryClient = new QueryClient({
 function App() {
   const theme = useSettingsStore((state) => state.theme);
 
+  // Apply theme to document root for global styling
   useEffect(() => {
-    // Apply theme
     document.documentElement.classList.toggle('dark', theme === 'dark');
   }, [theme]);
 
+  // Initialize Ollama WebSocket connection
   useEffect(() => {
-    // Connect to Ollama WebSocket
     ollamaService.connect();
-
-    return () => {
-      ollamaService.disconnect();
-    };
+    return () => ollamaService.disconnect(); // Cleanup on unmount
   }, []);
 
   return (

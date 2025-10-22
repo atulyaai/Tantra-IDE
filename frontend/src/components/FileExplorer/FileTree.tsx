@@ -11,16 +11,20 @@ export default function FileTree() {
   const setFileTree = useFileStore((state) => state.setFileTree);
   const openTab = useEditorStore((state) => state.openTab);
 
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading, refetch, error } = useQuery({
     queryKey: ['file-tree'],
     queryFn: () => fileAPI.getTree('.'),
     refetchInterval: 5000, // Refresh every 5 seconds
+    retry: 3, // Retry failed requests
+    retryDelay: 1000, // Wait 1 second between retries
   });
 
-  const { data: gitStatus } = useQuery({
+  const { data: gitStatus, error: gitError } = useQuery({
     queryKey: ['git-status'],
     queryFn: () => gitAPI.status(),
     refetchInterval: 10000, // Refresh every 10 seconds
+    retry: 3,
+    retryDelay: 1000,
   });
 
   useEffect(() => {
@@ -107,6 +111,16 @@ export default function FileTree() {
 
       {isLoading ? (
         <div className="text-sm text-muted-foreground px-2">Loading...</div>
+      ) : error ? (
+        <div className="text-sm text-red-500 px-2">
+          Error loading files: {error instanceof Error ? error.message : 'Unknown error'}
+          <button 
+            className="ml-2 text-blue-500 hover:underline"
+            onClick={() => refetch()}
+          >
+            Retry
+          </button>
+        </div>
       ) : fileTree.length === 0 ? (
         <div className="text-sm text-muted-foreground px-2">
           No files found. Open a folder to get started.

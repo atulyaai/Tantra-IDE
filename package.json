@@ -1,7 +1,7 @@
 {
   "name": "tantra-ide",
   "version": "1.0.0",
-  "description": "AI-Powered Web IDE with Local LLM",
+  "description": "🚀 AI-Powered Web IDE with Local LLM - Build, Code, Deploy with AI Assistance",
   "private": true,
   "workspaces": [
     "frontend",
@@ -14,7 +14,18 @@
     "build": "npm run build:frontend && npm run build:backend",
     "build:frontend": "cd frontend && npm run build",
     "build:backend": "cd backend && npm run build",
-    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install"
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "lint": "npm run lint:frontend && npm run lint:backend",
+    "lint:frontend": "cd frontend && npm run lint",
+    "lint:backend": "cd backend && npm run lint",
+    "type-check": "npm run type-check:frontend && npm run type-check:backend",
+    "type-check:frontend": "cd frontend && npm run type-check",
+    "type-check:backend": "cd backend && npm run type-check",
+    "test": "npm run test:frontend && npm run test:backend",
+    "test:frontend": "cd frontend && npm run test",
+    "test:backend": "cd backend && npm run test",
+    "clean": "rm -rf node_modules frontend/node_modules backend/node_modules",
+    "postinstall": "npm run install:all"
   },
   "keywords": [
     "ide",
@@ -22,12 +33,50 @@
     "llm",
     "code-editor",
     "ollama",
-    "monaco-editor"
+    "monaco-editor",
+    "typescript",
+    "react",
+    "vite",
+    "express",
+    "websocket",
+    "local-ai",
+    "development",
+    "programming",
+    "assistant",
+    "code-generation",
+    "debugging",
+    "deployment",
+    "git",
+    "terminal",
+    "web-ide",
+    "ai-powered",
+    "privacy-first",
+    "offline-first"
   ],
-  "author": "Tantra IDE Team",
+  "author": {
+    "name": "Tantra IDE Team",
+    "email": "contact@tantra-ide.dev",
+    "url": "https://tantra-ide.dev"
+  },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atulyaai/Tantra-IDE.git"
+  },
+  "bugs": {
+    "url": "https://github.com/atulyaai/Tantra-IDE/issues"
+  },
+  "homepage": "https://github.com/atulyaai/Tantra-IDE#readme",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
   "devDependencies": {
     "concurrently": "^8.2.2"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/atulyaai"
   }
 }
 
