@@ -13,6 +13,7 @@ import {
   Search, 
   Database, 
   Zap,
+  Bot,
   Settings 
 } from 'lucide-react';
 
@@ -35,8 +36,9 @@ export default function Sidebar({ onPanelChange }: SidebarProps) {
     { id: 'media', label: 'Media', icon: Image },
     { id: 'deployment', label: 'Deploy', icon: Rocket },
     { id: 'search', label: 'Search', icon: Search },
-    { id: 'database', label: 'Database', icon: Database },
     { id: 'performance', label: 'Performance', icon: Zap },
+    { id: 'database', label: 'Database', icon: Database },
+    { id: 'agent', label: 'Agent', icon: Bot },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
 

@@ -7,6 +7,9 @@ import TerminalPanel from '../Terminal/TerminalPanel';
 import MediaBrowser from '../MediaBrowser/MediaBrowser';
 import DeploymentPanel from '../Deployment/DeploymentPanel';
 import SearchPanel from '../Search/SearchPanel';
+import PerformancePanel from '../Performance/PerformancePanel';
+import DatabasePanel from '../Database/DatabasePanel';
+import AgentPanel from '../Agent/AgentPanel';
 import StatusBar from './StatusBar';
 import { Menu, Code2, MessageSquare, Terminal, Settings } from 'lucide-react';
 
@@ -26,6 +29,9 @@ export default function MainLayout() {
       case 'security': return 'Security';
       case 'deployment': return 'Deployment';
       case 'search': return 'Search';
+      case 'performance': return 'Performance';
+      case 'database': return 'Database';
+      case 'agent': return 'Agent';
       default: return 'Explorer';
     }
   };
@@ -40,6 +46,12 @@ export default function MainLayout() {
         return <DeploymentPanel />;
       case 'search':
         return <SearchPanel />;
+      case 'performance':
+        return <PerformancePanel />;
+      case 'database':
+        return <DatabasePanel />;
+      case 'agent':
+        return <AgentPanel />;
       case 'git':
         return <div className="p-4 text-center text-muted-foreground">Git panel coming soon</div>;
       case 'packages':

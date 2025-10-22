@@ -13,6 +13,9 @@ import securityRouter from './routes/security.js';
 import mediaRouter from './routes/media.js';
 import deploymentRouter from './routes/deployment.js';
 import searchRouter from './routes/search.js';
+import performanceRouter from './routes/performance.js';
+import databaseRouter from './routes/database.js';
+import agentRouter from './routes/agent.js';
 
 // Services
 import { setupTerminalHandlers } from './services/terminalService.js';
@@ -45,6 +48,9 @@ app.use('/api/security', securityRouter);
 app.use('/api/media', mediaRouter);
 app.use('/api/deployment', deploymentRouter);
 app.use('/api/search', searchRouter);
+app.use('/api/performance', performanceRouter);
+app.use('/api/database', databaseRouter);
+app.use('/api/agent', agentRouter);
 
 // Health check
 app.get('/health', (req, res) => {
@@ -98,6 +104,9 @@ server.listen(PORT, () => {
   console.log(`   - Media:      http://localhost:${PORT}/api/media`);
   console.log(`   - Deployment: http://localhost:${PORT}/api/deployment`);
   console.log(`   - Search:     http://localhost:${PORT}/api/search`);
+  console.log(`   - Performance: http://localhost:${PORT}/api/performance`);
+  console.log(`   - Database:   http://localhost:${PORT}/api/database`);
+  console.log(`   - Agent:      http://localhost:${PORT}/api/agent`);
   console.log('');
   console.log('✅ WebSocket: Connected');
   console.log('');

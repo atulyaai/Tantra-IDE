@@ -242,5 +242,145 @@ export const searchAPI = {
   },
 };
 
+// Performance Operations
+export const performanceAPI = {
+  getBundleAnalysis: async (): Promise<any> => {
+    const { data } = await api.get<ApiResponse<any>>('/performance/bundle');
+    return data.data;
+  },
+
+  getLighthouseReport: async (url?: string): Promise<any> => {
+    const { data } = await api.get<ApiResponse<any>>('/performance/lighthouse', {
+      params: { url },
+    });
+    return data.data;
+  },
+
+  getMemoryProfile: async (): Promise<any> => {
+    const { data } = await api.get<ApiResponse<any>>('/performance/memory');
+    return data.data;
+  },
+
+  getCPUProfile: async (duration?: number): Promise<any> => {
+    const { data } = await api.get<ApiResponse<any>>('/performance/cpu', {
+      params: { duration },
+    });
+    return data.data;
+  },
+
+  getNetworkAnalysis: async (url?: string): Promise<any> => {
+    const { data } = await api.get<ApiResponse<any>>('/performance/network', {
+      params: { url },
+    });
+    return data.data;
+  },
+
+  getPerformanceReport: async (): Promise<any> => {
+    const { data } = await api.get<ApiResponse<any>>('/performance/report');
+    return data.data;
+  },
+
+  getOptimizationSuggestions: async (bundle: any, lighthouse: any): Promise<string[]> => {
+    const { data } = await api.get<ApiResponse<string[]>>('/performance/suggestions', {
+      params: { bundle, lighthouse },
+    });
+    return data.data || [];
+  },
+};
+
+// Database Operations
+export const databaseAPI = {
+  getConnections: async (): Promise<any[]> => {
+    const { data } = await api.get<ApiResponse<any[]>>('/database/connections');
+    return data.data || [];
+  },
+
+  testConnection: async (connection: any): Promise<boolean> => {
+    const { data } = await api.post<ApiResponse<{ connected: boolean }>>('/database/test', { connection });
+    return data.data?.connected || false;
+  },
+
+  executeQuery: async (connection: any, query: string): Promise<any> => {
+    const { data } = await api.post<ApiResponse<any>>('/database/query', { connection, query });
+    return data.data;
+  },
+
+  getSchema: async (connection: any): Promise<any> => {
+    const { data } = await api.get<ApiResponse<any>>('/database/schema/1', { connection });
+    return data.data;
+  },
+
+  buildSelectQuery: async (table: string, columns?: string[], where?: any): Promise<string> => {
+    const { data } = await api.post<ApiResponse<{ query: string }>>('/database/query-builder/select', {
+      table,
+      columns,
+      where,
+    });
+    return data.data?.query || '';
+  },
+
+  buildInsertQuery: async (table: string, data: any): Promise<string> => {
+    const { data: response } = await api.post<ApiResponse<{ query: string }>>('/database/query-builder/insert', {
+      table,
+      data,
+    });
+    return response.data?.query || '';
+  },
+
+  buildUpdateQuery: async (table: string, data: any, where: any): Promise<string> => {
+    const { data: response } = await api.post<ApiResponse<{ query: string }>>('/database/query-builder/update', {
+      table,
+      data,
+      where,
+    });
+    return response.data?.query || '';
+  },
+
+  buildDeleteQuery: async (table: string, where: any): Promise<string> => {
+    const { data: response } = await api.post<ApiResponse<{ query: string }>>('/database/query-builder/delete', {
+      table,
+      where,
+    });
+    return response.data?.query || '';
+  },
+};
+
+// Agent Operations
+export const agentAPI = {
+  createPlan: async (goal: string, context?: any): Promise<any> => {
+    const { data } = await api.post<ApiResponse<any>>('/agent/plan', { goal, context });
+    return data.data;
+  },
+
+  executePlan: async (plan: any): Promise<any> => {
+    const { data } = await api.post<ApiResponse<any>>('/agent/execute-plan', { plan });
+    return data.data;
+  },
+
+  executeTask: async (task: any, context?: any): Promise<any> => {
+    const { data } = await api.post<ApiResponse<any>>('/agent/execute-task', { task, context });
+    return data.data;
+  },
+
+  getPlans: async (): Promise<any[]> => {
+    const { data } = await api.get<ApiResponse<any[]>>('/agent/plans');
+    return data.data || [];
+  },
+
+  getPlan: async (id: string): Promise<any> => {
+    const { data } = await api.get<ApiResponse<any>>(`/agent/plans/${id}`);
+    return data.data;
+  },
+
+  savePlan: async (plan: any): Promise<void> => {
+    await api.post('/agent/plans', { plan });
+  },
+
+  getContext: async (): Promise<any> => {
+    const { data } = await api.get<ApiResponse<any>>('/agent/context');
+    return data.data;
+  },
+};
+
 export default api;
 
