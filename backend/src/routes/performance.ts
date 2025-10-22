@@ -60,7 +60,7 @@ router.get('/report', async (req, res, next) => {
   }
 });
 
-router.get('/suggestions', async (req, res, next) => {
+router.post('/suggestions', async (req, res, next) => {
   try {
     const { bundle, lighthouse } = req.body;
     const suggestions = await performanceService.getOptimizationSuggestions(bundle, lighthouse);

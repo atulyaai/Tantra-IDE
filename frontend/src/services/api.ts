@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { FileNode, FileContent, GitChange, ApiResponse } from '../types';
+import type { FileNode, FileContent, GitChange, ApiResponse } from '../types/index.js';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
@@ -281,8 +281,8 @@ export const performanceAPI = {
   },
 
   getOptimizationSuggestions: async (bundle: any, lighthouse: any): Promise<string[]> => {
-    const { data } = await api.get<ApiResponse<string[]>>('/performance/suggestions', {
-      params: { bundle, lighthouse },
+    const { data } = await api.post<ApiResponse<string[]>>('/performance/suggestions', {
+      bundle, lighthouse,
     });
     return data.data || [];
   },
@@ -306,7 +306,7 @@ export const databaseAPI = {
   },
 
   getSchema: async (connection: any): Promise<any> => {
-    const { data } = await api.get<ApiResponse<any>>('/database/schema/1', { connection });
+    const { data } = await api.post<ApiResponse<any>>('/database/schema/1', { connection });
     return data.data;
   },
 

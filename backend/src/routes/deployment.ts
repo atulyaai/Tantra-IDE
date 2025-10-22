@@ -79,8 +79,8 @@ router.post('/install-cli', async (req, res, next) => {
         return res.status(400).json({ success: false, error: 'Unsupported platform' });
     }
 
-    const { exec } = require('child_process');
-    const { promisify } = require('util');
+    const { exec } = await import('child_process');
+    const { promisify } = await import('util');
     const execAsync = promisify(exec);
 
     await execAsync(command);

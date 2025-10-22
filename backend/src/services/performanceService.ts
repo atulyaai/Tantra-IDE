@@ -121,7 +121,7 @@ async function detectBuildCommand(): Promise<string> {
     
     if (packageJson.scripts?.build) {
       return 'npm run build';
-    } else if (packageJson.scripts?.build:prod) {
+    } else if (packageJson.scripts?.['build:prod']) {
       return 'npm run build:prod';
     } else if (packageJson.scripts?.webpack) {
       return 'npm run webpack';
@@ -307,14 +307,14 @@ export async function runMemoryProfile(): Promise<any> {
 export async function runCPUProfile(duration: number = 10000): Promise<any> {
   try {
     // Start CPU profiling
-    const profiler = require('v8-profiler-next');
-    profiler.startProfiling('CPU Profile');
+    const profiler = await import('v8-profiler-next');
+    profiler.default.startProfiling('CPU Profile');
     
     // Wait for specified duration
     await new Promise(resolve => setTimeout(resolve, duration));
     
     // Stop profiling
-    const profile = profiler.stopProfiling('CPU Profile');
+    const profile = profiler.default.stopProfiling('CPU Profile');
     
     return {
       profile: profile,
@@ -333,8 +333,8 @@ export async function analyzeNetworkRequests(url?: string): Promise<any> {
     const targetUrl = url || 'http://localhost:3000';
     
     // Use Puppeteer to analyze network requests
-    const puppeteer = require('puppeteer');
-    const browser = await puppeteer.launch({ headless: true });
+    const puppeteer = await import('puppeteer');
+    const browser = await puppeteer.default.launch({ headless: true });
     const page = await browser.newPage();
     
     const requests: any[] = [];
