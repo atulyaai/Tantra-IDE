@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import Sidebar from './Sidebar';
 import FileExplorer from '../FileExplorer/FileTree';
 import MonacoEditor from '../Editor/MonacoEditor';
 import ChatPanel from '../AIAssistant/ChatPanel';
 import TerminalPanel from '../Terminal/TerminalPanel';
+import MediaBrowser from '../MediaBrowser/MediaBrowser';
 import StatusBar from './StatusBar';
 import { Menu, Code2, MessageSquare, Terminal, Settings } from 'lucide-react';
 
@@ -11,6 +13,35 @@ export default function MainLayout() {
   const [rightPanelWidth, setRightPanelWidth] = useState(350);
   const [bottomPanelHeight, setBottomPanelHeight] = useState(200);
   const [showTerminal, setShowTerminal] = useState(true);
+  const [activeLeftPanel, setActiveLeftPanel] = useState('files');
+
+  const getLeftPanelTitle = () => {
+    switch (activeLeftPanel) {
+      case 'files': return 'Explorer';
+      case 'media': return 'Media Browser';
+      case 'git': return 'Git';
+      case 'packages': return 'Packages';
+      case 'security': return 'Security';
+      default: return 'Explorer';
+    }
+  };
+
+  const renderLeftPanel = () => {
+    switch (activeLeftPanel) {
+      case 'files':
+        return <FileExplorer />;
+      case 'media':
+        return <MediaBrowser />;
+      case 'git':
+        return <div className="p-4 text-center text-muted-foreground">Git panel coming soon</div>;
+      case 'packages':
+        return <div className="p-4 text-center text-muted-foreground">Packages panel coming soon</div>;
+      case 'security':
+        return <div className="p-4 text-center text-muted-foreground">Security panel coming soon</div>;
+      default:
+        return <FileExplorer />;
+    }
+  };
 
   return (
     <div className="flex flex-col h-full bg-background">
@@ -30,16 +61,19 @@ export default function MainLayout() {
 
       {/* Main Content Area */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Left Sidebar - File Explorer */}
+        {/* Sidebar */}
+        <Sidebar onPanelChange={setActiveLeftPanel} />
+        
+        {/* Left Sidebar - Dynamic Panel */}
         <div 
           className="border-r border-border overflow-hidden flex flex-col"
           style={{ width: `${leftPanelWidth}px` }}
         >
           <div className="h-10 border-b border-border flex items-center px-3 bg-card">
             <Menu className="w-4 h-4 mr-2" />
-            <span className="text-sm font-medium">Explorer</span>
+            <span className="text-sm font-medium">{getLeftPanelTitle()}</span>
           </div>
-          <FileExplorer />
+          {renderLeftPanel()}
         </div>
 
         {/* Resize Handle - Left */}

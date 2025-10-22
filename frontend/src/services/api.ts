@@ -169,6 +169,16 @@ export const mediaAPI = {
     const { data } = await api.post<ApiResponse<string[]>>('/media/find-usage', { path });
     return data.data || [];
   },
+
+  getStats: async (): Promise<any> => {
+    const { data } = await api.get<ApiResponse<any>>('/media/stats');
+    return data.data;
+  },
+
+  getUnused: async (): Promise<any[]> => {
+    const { data } = await api.get<ApiResponse<any[]>>('/media/unused');
+    return data.data || [];
+  },
 };
 
 // Deployment Operations
