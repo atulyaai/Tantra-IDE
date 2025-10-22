@@ -286,7 +286,7 @@ async function executeDeployTask(task: Task, context?: AgentContext): Promise<an
 
 async function executeTestTask(task: Task, context?: AgentContext): Promise<any> {
   // Run tests
-  const testCommand = detectTestCommand();
+  const testCommand = await detectTestCommand();
   
   try {
     const { stdout } = await execAsync(testCommand, { cwd: WORKSPACE_PATH });
@@ -381,12 +381,12 @@ function extractSearchQueryFromTask(task: Task): string {
   return task.description.split(' ').slice(0, 5).join(' ');
 }
 
-function detectTestCommand(): string {
+async function detectTestCommand(): Promise<string> {
   // Detect test command based on project type
   try {
     // Check for package.json
     const packageJsonPath = path.join(WORKSPACE_PATH, 'package.json');
-    fs.access(packageJsonPath);
+    await fs.access(packageJsonPath);
     return 'npm test';
   } catch {
     return 'echo "No test command detected"';

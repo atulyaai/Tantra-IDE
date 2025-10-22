@@ -1,6 +1,6 @@
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import * as fileService from './fileService.js';
+import * as fileService from '../services/fileService.js';
 import path from 'path';
 
 const execAsync = promisify(exec);

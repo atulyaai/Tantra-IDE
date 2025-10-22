@@ -1,7 +1,7 @@
 import { io, Socket } from 'socket.io-client';
-import type { Message, ToolCall, WSEvent } from '../types';
+import type { Message, ToolCall, WSEvent } from '../types/index.js';
 
-const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:3001';
+const WS_URL = import.meta.env.VITE_WS_URL || 'http://localhost:3001';
 
 class OllamaService {
   private socket: Socket | null = null;

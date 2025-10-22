@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import MainLayout from './components/Layout/MainLayout';
-import { useSettingsStore } from './stores/settingsStore';
-import ollamaService from './services/ollama';
+import MainLayout from './components/Layout/MainLayout.js';
+import { useSettingsStore } from './stores/settingsStore.js';
+import ollamaService from './services/ollama.js';
 
 const queryClient = new QueryClient({
   defaultOptions: {

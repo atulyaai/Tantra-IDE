@@ -40,7 +40,7 @@ router.post('/query', async (req, res, next) => {
   }
 });
 
-router.get('/schema/:connectionId', async (req, res, next) => {
+router.post('/schema/:connectionId', async (req, res, next) => {
   try {
     const { connectionId } = req.params;
     const { connection } = req.body;
