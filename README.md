@@ -81,6 +81,16 @@ Voice interface with wake word, speech recognition, and natural language command
 
 ## 🚀 Quick Start
 
+### Prerequisites
+
+**Required**:
+- **Node.js 18+** and **npm 9+** - [Download here](https://nodejs.org/)
+- **Ollama** - [Download here](https://ollama.com/download)
+
+**Optional**:
+- **Git** - For version control features
+- **Ripgrep** - For faster code search
+
 ### 1. Install Ollama
 
 ```bash
@@ -110,26 +120,56 @@ ollama pull codellama:7b-instruct
 ```bash
 git clone https://github.com/atulyaai/Tantra-IDE
 cd Tantra-IDE
+
+# Install all dependencies
 npm install
+cd backend && npm install
+cd ../frontend && npm install
+cd ..
 ```
 
-### 4. Start Development
+### 4. Configure Environment
+
+**Create `backend/.env`**:
+```env
+PORT=3001
+OLLAMA_URL=http://localhost:11434
+OLLAMA_MODEL=qwen2.5-coder:7b
+WORKSPACE_PATH=./workspace
+NODE_ENV=development
+```
+
+**Create `frontend/.env`**:
+```env
+VITE_API_URL=http://localhost:3001
+VITE_WS_URL=ws://localhost:3001
+```
+
+### 5. Start Development
 
 ```bash
-# Start both frontend and backend
-npm run dev
-
-# Or start separately:
-# Frontend (http://localhost:5173)
-cd frontend && npm run dev
-
-# Backend (http://localhost:3001)
+# Start backend (Terminal 1)
 cd backend && npm run dev
+
+# Start frontend (Terminal 2)
+cd frontend && npm run dev
 ```
 
-### 5. Open Browser
+### 6. Open Browser
 
 Navigate to **http://localhost:5173**
+
+## 📋 Testing Status
+
+**Current Status**: ✅ **Ready for Testing**
+
+- ✅ All 10 core features implemented
+- ✅ Backend API routes complete
+- ✅ Frontend components built
+- ✅ Ollama integration ready
+- ✅ Documentation complete
+
+**See [TESTING.md](./TESTING.md) for detailed testing procedures**
 
 ## 📖 Usage
 
@@ -214,10 +254,12 @@ Models are configured in `backend/src/services/ollamaService.ts`:
 
 ## 📚 Documentation
 
+- [TESTING.md](./TESTING.md) - Testing procedures and results
+- [API.md](./API.md) - Complete API documentation
 - [ROADMAP.md](./ROADMAP.md) - Full feature list and development timeline
+- [SETUP.md](./SETUP.md) - Detailed setup guide
 - [System Prompts](./backend/src/prompts/) - AI agent configurations
-- [API Documentation](./docs/API.md) - Backend API reference (coming soon)
-- [Contributing Guide](./CONTRIBUTING.md) - How to contribute (coming soon)
+- [Contributing Guide](./CONTRIBUTING.md) - How to contribute
 
 ## 🤝 Contributing
 
