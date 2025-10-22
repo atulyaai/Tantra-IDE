@@ -10,6 +10,9 @@ import SearchPanel from '../Search/SearchPanel';
 import PerformancePanel from '../Performance/PerformancePanel';
 import DatabasePanel from '../Database/DatabasePanel';
 import AgentPanel from '../Agent/AgentPanel';
+import GitPanel from '../Git/GitPanel';
+import PackagesPanel from '../Packages/PackagesPanel';
+import SecurityPanel from '../Security/SecurityPanel';
 import StatusBar from './StatusBar';
 import { Menu, Code2, MessageSquare, Terminal, Settings } from 'lucide-react';
 
@@ -53,11 +56,11 @@ export default function MainLayout() {
       case 'agent':
         return <AgentPanel />;
       case 'git':
-        return <div className="p-4 text-center text-muted-foreground">Git panel coming soon</div>;
+        return <GitPanel />;
       case 'packages':
-        return <div className="p-4 text-center text-muted-foreground">Packages panel coming soon</div>;
+        return <PackagesPanel />;
       case 'security':
-        return <div className="p-4 text-center text-muted-foreground">Security panel coming soon</div>;
+        return <SecurityPanel />;
       default:
         return <FileExplorer />;
     }

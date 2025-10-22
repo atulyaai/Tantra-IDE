@@ -359,7 +359,7 @@ export async function analyzeNetworkRequests(url?: string): Promise<any> {
     });
     
     await page.goto(targetUrl);
-    await page.waitForLoadState('networkidle');
+    await new Promise(resolve => setTimeout(resolve, 2000)); // Wait for page to load
     
     await browser.close();
     
