@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
-import { Terminal as XTerm } from 'xterm';
-import { FitAddon } from 'xterm-addon-fit';
-import { WebLinksAddon } from 'xterm-addon-web-links';
-import 'xterm/css/xterm.css';
+import { Terminal as XTerm } from '@xterm/xterm';
+import { FitAddon } from '@xterm/addon-fit';
+import { WebLinksAddon } from '@xterm/addon-web-links';
+import '@xterm/xterm/css/xterm.css';
 import { io, Socket } from 'socket.io-client';
 
-const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:3001';
+const WS_URL = (import.meta as any).env?.VITE_WS_URL || 'ws://localhost:3001';
 
 export default function TerminalPanel() {
   const terminalRef = useRef<HTMLDivElement>(null);

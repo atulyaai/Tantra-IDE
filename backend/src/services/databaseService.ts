@@ -122,6 +122,7 @@ function parseDatabaseConfig(content: string, filename: string): DatabaseConnect
           id: `env-${Date.now()}`,
           name: 'Environment Database',
           ...connection,
+          type: connection.type || 'postgresql',
           status: 'disconnected',
         });
       }
@@ -136,6 +137,7 @@ function parseDatabaseConfig(content: string, filename: string): DatabaseConnect
           id: `prisma-${Date.now()}`,
           name: 'Prisma Database',
           ...connection,
+          type: connection.type || 'postgresql',
           status: 'disconnected',
         });
       }

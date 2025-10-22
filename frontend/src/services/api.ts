@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { FileNode, FileContent, GitChange, ApiResponse } from '../types/index.js';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const API_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:3001';
 
 const api = axios.create({
   baseURL: `${API_URL}/api`,
@@ -128,7 +128,7 @@ export const packageAPI = {
 
   detectManager: async (): Promise<string | null> => {
     const { data } = await api.get<ApiResponse<string | null>>('/packages/manager');
-    return data.data;
+    return data.data || null;
   },
 };
 

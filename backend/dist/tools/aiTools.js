@@ -1,0 +1,207 @@
+import { exec } from 'child_process';
+import { promisify } from 'util';
+import * as fileService from '../services/fileService.js';
+const execAsync = promisify(exec);
+export const TOOLS = [
+    {
+        name: 'read_file',
+        description: 'Read the contents of a file',
+        parameters: {
+            type: 'object',
+            properties: {
+                path: {
+                    type: 'string',
+                    description: 'The path to the file to read',
+                },
+            },
+            required: ['path'],
+        },
+    },
+    {
+        name: 'write_file',
+        description: 'Write content to a file (creates if doesn\'t exist)',
+        parameters: {
+            type: 'object',
+            properties: {
+                path: {
+                    type: 'string',
+                    description: 'The path to the file to write',
+                },
+                content: {
+                    type: 'string',
+                    description: 'The content to write to the file',
+                },
+            },
+            required: ['path', 'content'],
+        },
+    },
+    {
+        name: 'list_files',
+        description: 'List files and directories in a directory',
+        parameters: {
+            type: 'object',
+            properties: {
+                directory: {
+                    type: 'string',
+                    description: 'The directory path to list',
+                },
+            },
+            required: ['directory'],
+        },
+    },
+    {
+        name: 'search_code',
+        description: 'Search for code patterns in files',
+        parameters: {
+            type: 'object',
+            properties: {
+                pattern: {
+                    type: 'string',
+                    description: 'The search pattern (regex or text)',
+                },
+                path: {
+                    type: 'string',
+                    description: 'The directory to search in',
+                },
+            },
+            required: ['pattern'],
+        },
+    },
+    {
+        name: 'run_command',
+        description: 'Execute a terminal command',
+        parameters: {
+            type: 'object',
+            properties: {
+                command: {
+                    type: 'string',
+                    description: 'The command to execute',
+                },
+                cwd: {
+                    type: 'string',
+                    description: 'Working directory for the command',
+                },
+            },
+            required: ['command'],
+        },
+    },
+    {
+        name: 'create_file',
+        description: 'Create a new file with content',
+        parameters: {
+            type: 'object',
+            properties: {
+                path: {
+                    type: 'string',
+                    description: 'The path for the new file',
+                },
+                content: {
+                    type: 'string',
+                    description: 'The initial content of the file',
+                },
+            },
+            required: ['path'],
+        },
+    },
+    {
+        name: 'delete_file',
+        description: 'Delete a file or directory',
+        parameters: {
+            type: 'object',
+            properties: {
+                path: {
+                    type: 'string',
+                    description: 'The path to delete',
+                },
+            },
+            required: ['path'],
+        },
+    },
+    {
+        name: 'create_directory',
+        description: 'Create a new directory',
+        parameters: {
+            type: 'object',
+            properties: {
+                path: {
+                    type: 'string',
+                    description: 'The path for the new directory',
+                },
+            },
+            required: ['path'],
+        },
+    },
+];
+export async function executeTool(toolCall) {
+    const { name, parameters } = toolCall;
+    try {
+        toolCall.status = 'running';
+        let result;
+        switch (name) {
+            case 'read_file':
+                result = await fileService.readFile(parameters.path);
+                break;
+            case 'write_file':
+                await fileService.writeFile(parameters.path, parameters.content);
+                result = { success: true, message: 'File written successfully' };
+                break;
+            case 'create_file':
+                await fileService.createFile(parameters.path, parameters.content || '');
+                result = { success: true, message: 'File created successfully' };
+                break;
+            case 'delete_file':
+                await fileService.deleteFile(parameters.path);
+                result = { success: true, message: 'File deleted successfully' };
+                break;
+            case 'create_directory':
+                await fileService.createFolder(parameters.path);
+                result = { success: true, message: 'Directory created successfully' };
+                break;
+            case 'list_files':
+                const files = await fileService.getFileTree(parameters.directory || '.');
+                result = files;
+                break;
+            case 'search_code':
+                const searchResults = await fileService.searchFiles(parameters.pattern, parameters.path || '.');
+                result = searchResults;
+                break;
+            case 'run_command':
+                const { stdout, stderr } = await execAsync(parameters.command, {
+                    cwd: parameters.cwd || process.cwd(),
+                    timeout: 30000, // 30 second timeout
+                });
+                result = {
+                    stdout,
+                    stderr,
+                    success: true,
+                };
+                break;
+            default:
+                throw new Error(`Unknown tool: ${name}`);
+        }
+        toolCall.result = result;
+        toolCall.status = 'completed';
+    }
+    catch (error) {
+        toolCall.status = 'failed';
+        toolCall.error = error.message;
+        toolCall.result = { error: error.message };
+    }
+    return toolCall;
+}
+export function getToolDefinitions() {
+    return TOOLS;
+}
+export function validateToolCall(toolCall) {
+    const tool = TOOLS.find(t => t.name === toolCall.name);
+    if (!tool)
+        return false;
+    // Check required parameters
+    for (const required of tool.parameters.required) {
+        if (!(required in toolCall.parameters)) {
+            return false;
+        }
+    }
+    return true;
+}
+//# sourceMappingURL=aiTools.js.map

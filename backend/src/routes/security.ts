@@ -4,6 +4,29 @@ import * as packageService from '../services/packageService.js';
 
 const router = express.Router();
 
+router.get('/scan', async (req, res, next) => {
+  try {
+    const { type = 'all' } = req.query;
+    const manager = await packageService.detectPackageManager();
+    
+    let vulnerabilities: any[] = [];
+    
+    if (type === 'dependencies' || type === 'all') {
+      const depResult = await securityService.scanDependencies(manager || 'npm');
+      vulnerabilities = [...vulnerabilities, ...depResult.vulnerabilities];
+    }
+    
+    if (type === 'code' || type === 'all') {
+      const codeVulns = await securityService.scanCodeSecurity();
+      vulnerabilities = [...vulnerabilities, ...codeVulns];
+    }
+    
+    res.json({ success: true, data: vulnerabilities });
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.post('/scan', async (req, res, next) => {
   try {
     const { type = 'all' } = req.body;

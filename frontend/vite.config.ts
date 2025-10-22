@@ -5,6 +5,9 @@ import path from 'path'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  define: {
+    'import.meta.env.VITE_WS_URL': JSON.stringify(process.env.VITE_WS_URL || 'http://localhost:3001'),
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
