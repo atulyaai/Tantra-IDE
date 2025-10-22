@@ -186,36 +186,57 @@ export const deploymentAPI = {
   deploy: async (platform: string, config: any): Promise<any> => {
     const { data } = await api.post<ApiResponse<any>>('/deployment/deploy', {
       platform,
-      config,
+      ...config,
     });
     return data.data;
   },
 
-  getLogs: async (deploymentId: string): Promise<string[]> => {
-    const { data } = await api.get<ApiResponse<string[]>>(`/deployment/logs/${deploymentId}`);
+  getPlatforms: async (): Promise<any[]> => {
+    const { data } = await api.get<ApiResponse<any[]>>('/deployment/platforms');
     return data.data || [];
+  },
+
+  getConfig: async (): Promise<any> => {
+    const { data } = await api.get<ApiResponse<any>>('/deployment/config');
+    return data.data;
+  },
+
+  getHistory: async (): Promise<any[]> => {
+    const { data } = await api.get<ApiResponse<any[]>>('/deployment/history');
+    return data.data || [];
+  },
+
+  installCLI: async (platform: string): Promise<void> => {
+    await api.post('/deployment/install-cli', { platform });
   },
 };
 
 // Search Operations
 export const searchAPI = {
-  web: async (query: string, source: string): Promise<any[]> => {
+  web: async (query: string, source: string = 'all', options: any = {}): Promise<any[]> => {
     const { data } = await api.get<ApiResponse<any[]>>('/search/web', {
-      params: { query, source },
+      params: { query, source, ...options },
     });
     return data.data || [];
   },
 
-  packages: async (query: string, registry: string = 'npm'): Promise<any[]> => {
-    const { data } = await api.get<ApiResponse<any[]>>('/search/packages', {
-      params: { query, registry },
+  suggestions: async (query: string): Promise<string[]> => {
+    const { data } = await api.get<ApiResponse<string[]>>('/search/suggestions', {
+      params: { q: query },
     });
     return data.data || [];
   },
 
-  docs: async (query: string): Promise<any[]> => {
+  code: async (query: string, language?: string): Promise<any[]> => {
+    const { data } = await api.get<ApiResponse<any[]>>('/search/code', {
+      params: { query, language },
+    });
+    return data.data || [];
+  },
+
+  docs: async (query: string, framework?: string): Promise<any[]> => {
     const { data } = await api.get<ApiResponse<any[]>>('/search/docs', {
-      params: { query },
+      params: { query, framework },
     });
     return data.data || [];
   },

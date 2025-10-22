@@ -5,6 +5,8 @@ import MonacoEditor from '../Editor/MonacoEditor';
 import ChatPanel from '../AIAssistant/ChatPanel';
 import TerminalPanel from '../Terminal/TerminalPanel';
 import MediaBrowser from '../MediaBrowser/MediaBrowser';
+import DeploymentPanel from '../Deployment/DeploymentPanel';
+import SearchPanel from '../Search/SearchPanel';
 import StatusBar from './StatusBar';
 import { Menu, Code2, MessageSquare, Terminal, Settings } from 'lucide-react';
 
@@ -22,6 +24,8 @@ export default function MainLayout() {
       case 'git': return 'Git';
       case 'packages': return 'Packages';
       case 'security': return 'Security';
+      case 'deployment': return 'Deployment';
+      case 'search': return 'Search';
       default: return 'Explorer';
     }
   };
@@ -32,6 +36,10 @@ export default function MainLayout() {
         return <FileExplorer />;
       case 'media':
         return <MediaBrowser />;
+      case 'deployment':
+        return <DeploymentPanel />;
+      case 'search':
+        return <SearchPanel />;
       case 'git':
         return <div className="p-4 text-center text-muted-foreground">Git panel coming soon</div>;
       case 'packages':
