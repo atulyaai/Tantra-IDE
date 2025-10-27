@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import type { FileNode, FileContent, GitChange, ApiResponse } from '../types/index.js';
+import type { FileNode, FileContent, GitChange, ApiResponse } from '../types';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 

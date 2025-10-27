@@ -1,5 +1,5 @@
 import { io, Socket } from 'socket.io-client';
-import type { ToolCall } from '../types/index.js';
+import type { ToolCall } from '../types';
 
 const WS_URL = import.meta.env.VITE_WS_URL || 'http://localhost:3001';
 
