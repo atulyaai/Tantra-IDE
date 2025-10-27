@@ -1,17 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { agentAPI } from '../../services/api';
 import { 
   Bot, 
   Play, 
-  Pause, 
   CheckCircle, 
   XCircle, 
   Clock, 
   Loader2,
   Plus,
   Eye,
-  Save,
   RefreshCw
 } from 'lucide-react';
 
@@ -88,20 +86,6 @@ export default function AgentPanel() {
     }
   };
 
-  const getTaskStatusColor = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return 'text-green-500';
-      case 'failed':
-        return 'text-red-500';
-      case 'in_progress':
-        return 'text-blue-500';
-      case 'pending':
-        return 'text-gray-500';
-      default:
-        return 'text-gray-500';
-    }
-  };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -244,7 +228,7 @@ export default function AgentPanel() {
                 {/* Tasks */}
                 <div className="space-y-3">
                   <h4 className="font-semibold">Tasks</h4>
-                  {currentPlan.tasks.map((task: any, index: number) => (
+                  {currentPlan.tasks.map((task: any) => (
                     <div key={task.id} className="bg-card border border-border rounded p-4">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-2">

@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { mediaAPI } from '../../services/api';
-import { Image, Video, Music, Download, Eye, Tag, Trash2, Zap } from 'lucide-react';
+import { Image, Video, Music, Download, Eye, Tag, Zap } from 'lucide-react';
 import type { MediaFile } from '../../types';
 
 export default function MediaBrowser() {

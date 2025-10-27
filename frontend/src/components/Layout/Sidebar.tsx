@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useEditorStore } from '../../stores/editorStore';
 import { useChatStore } from '../../stores/chatStore';
 import { 
   FileText, 
@@ -23,7 +22,6 @@ interface SidebarProps {
 
 export default function Sidebar({ onPanelChange }: SidebarProps) {
   const [activeTab, setActiveTab] = useState('files');
-  const openTab = useEditorStore((state) => state.openTab);
   const isStreaming = useChatStore((state) => state.isStreaming);
 
   const tabs = [
