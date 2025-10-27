@@ -36,8 +36,15 @@ interface SearchResult {
 // Utility functions
 function isValidPath(inputPath: string): boolean {
   // Prevent directory traversal attacks
+  if (!inputPath || typeof inputPath !== 'string') {
+    return false;
+  }
+  
   const normalizedPath = path.normalize(inputPath);
-  return !normalizedPath.includes('..') && !normalizedPath.startsWith('/');
+  return !normalizedPath.includes('..') && 
+         !normalizedPath.startsWith('/') && 
+         !normalizedPath.includes('\\') &&
+         inputPath.length < 1000; // Prevent extremely long paths
 }
 
 function getFileExtension(filename: string): string {
@@ -50,7 +57,7 @@ function isAllowedFile(filename: string): boolean {
 }
 
 // Main service functions
-export async function getFileTree(relativePath: string): Promise<FileNode[]> {
+export async function getFileTree(relativePath: string, maxDepth: number = 10): Promise<FileNode[]> {
   if (!isValidPath(relativePath)) {
     throw new Error('Invalid path: potential directory traversal detected');
   }
@@ -93,9 +100,9 @@ export async function getFileTree(relativePath: string): Promise<FileNode[]> {
         };
         
         // Recursively get children for directories (with depth limit)
-        if (entry.isDirectory() && entryPath.split('/').length < 10) {
+        if (entry.isDirectory() && entryPath.split('/').length < maxDepth) {
           try {
-            node.children = await getFileTree(entryPath);
+            node.children = await getFileTree(entryPath, maxDepth - 1);
           } catch (error) {
             console.warn(`Error reading subdirectory ${entryPath}:`, error);
             node.children = [];

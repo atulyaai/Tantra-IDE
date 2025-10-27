@@ -3,6 +3,7 @@ import cors from 'cors';
 import http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import dotenv from 'dotenv';
+import rateLimit from 'express-rate-limit';
 
 // API Routes
 import filesRouter from './routes/files.js';
@@ -26,23 +27,46 @@ import debugRouter from './routes/debug.js';
 import { setupTerminalHandlers } from './services/terminalService.js';
 import { setupOllamaHandlers } from './services/ollamaService.js';
 
+// Middleware
+import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
+import { performanceMiddleware } from './middleware/performance.js';
+
 dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
 const io = new SocketIOServer(server, {
   cors: {
-    origin: '*', // Allow all origins in development
+    origin: process.env.NODE_ENV === 'production' 
+      ? [process.env.FRONTEND_URL || 'http://localhost:5173']
+      : ['http://localhost:5173', 'http://localhost:3000'],
     methods: ['GET', 'POST'],
+    credentials: true,
   },
 });
 
 const PORT = process.env.PORT || 3001;
 
 // Middleware configuration
-app.use(cors()); // Enable CORS for all routes
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? [process.env.FRONTEND_URL || 'http://localhost:5173']
+    : ['http://localhost:5173', 'http://localhost:3000'],
+  credentials: true,
+})); // Enable CORS for all routes
 app.use(express.json({ limit: '50mb' })); // Support large file uploads
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+
+// Rate limiting middleware
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.',
+});
+app.use('/api/', limiter);
+
+// Performance monitoring
+app.use(performanceMiddleware);
 
 // API Routes registration
 app.use('/api/files', filesRouter);
@@ -67,6 +91,9 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// 404 handler
+app.use(notFoundHandler);
+
 // WebSocket connection handling
 io.on('connection', (socket) => {
   console.log(`[WebSocket] Client connected: ${socket.id}`);
@@ -85,13 +112,7 @@ io.on('connection', (socket) => {
 });
 
 // Global error handling middleware
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error('[Error]', err);
-  res.status(500).json({
-    success: false,
-    error: err.message || 'Internal server error',
-  });
-});
+app.use(errorHandler);
 
 // Start server with detailed startup information
 server.listen(PORT, () => {

@@ -29,7 +29,8 @@
     "sharp": "^0.33.0",
     "simple-git": "^3.20.0",
     "socket.io": "^4.7.0",
-    "v8-profiler-next": "^1.5.0"
+    "v8-profiler-next": "^1.5.0",
+    "express-rate-limit": "^7.1.0"
   },
   "devDependencies": {
     "tsx": "^4.7.0",
