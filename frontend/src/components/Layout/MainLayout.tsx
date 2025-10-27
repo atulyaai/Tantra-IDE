@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import FileExplorer from '../FileExplorer/FileTree';
 import MonacoEditor from '../Editor/MonacoEditor';
@@ -109,6 +109,15 @@ export default function MainLayout() {
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   }, [bottomPanelHeight]);
+
+  // Cleanup event listeners on unmount
+  useEffect(() => {
+    return () => {
+      // Remove any lingering event listeners
+      document.removeEventListener('mousemove', () => {});
+      document.removeEventListener('mouseup', () => {});
+    };
+  }, []);
 
   return (
     <div className="flex flex-col h-full bg-background">

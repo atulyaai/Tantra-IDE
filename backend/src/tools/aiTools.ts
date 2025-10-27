@@ -5,6 +5,56 @@ import path from 'path';
 
 const execAsync = promisify(exec);
 
+// Command sanitization to prevent injection attacks
+function sanitizeCommand(command: string): string | null {
+  // Remove dangerous characters and patterns
+  const dangerousPatterns = [
+    /[;&|`$(){}[\]\\]/g,  // Shell metacharacters
+    /rm\s+-rf/,           // Dangerous rm commands
+    /sudo/,               // Privilege escalation
+    /chmod\s+777/,        // Dangerous permissions
+    /wget\s+http/,        // Downloading files
+    /curl\s+http/,        // Downloading files
+    /nc\s+/,              // Netcat
+    /python\s+-c/,        // Python code execution
+    /node\s+-e/,          // Node.js code execution
+  ];
+  
+  // Check for dangerous patterns
+  for (const pattern of dangerousPatterns) {
+    if (pattern.test(command)) {
+      return null;
+    }
+  }
+  
+  // Allow only safe commands
+  const allowedCommands = [
+    /^ls\s+/,             // List directory
+    /^pwd$/,              // Print working directory
+    /^cd\s+/,             // Change directory
+    /^cat\s+/,            // Read file
+    /^grep\s+/,           // Search text
+    /^find\s+/,           // Find files
+    /^git\s+/,            // Git commands
+    /^npm\s+/,            // NPM commands
+    /^yarn\s+/,           // Yarn commands
+    /^mkdir\s+/,          // Create directory
+    /^touch\s+/,          // Create file
+    /^echo\s+/,           // Echo text
+    /^which\s+/,          // Find executable
+    /^type\s+/,           // Type command
+  ];
+  
+  // Check if command matches allowed patterns
+  for (const pattern of allowedCommands) {
+    if (pattern.test(command.trim())) {
+      return command.trim();
+    }
+  }
+  
+  return null;
+}
+
 export interface ToolCall {
   id: string;
   name: string;
@@ -199,7 +249,13 @@ export async function executeTool(toolCall: ToolCall): Promise<ToolCall> {
         break;
         
       case 'run_command':
-        const { stdout, stderr } = await execAsync(parameters.command, {
+        // Sanitize command input to prevent injection attacks
+        const sanitizedCommand = sanitizeCommand(parameters.command);
+        if (!sanitizedCommand) {
+          throw new Error('Invalid or potentially dangerous command');
+        }
+        
+        const { stdout, stderr } = await execAsync(sanitizedCommand, {
           cwd: parameters.cwd || process.cwd(),
           timeout: 30000, // 30 second timeout
         });
