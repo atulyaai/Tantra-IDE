@@ -11,9 +11,9 @@ router.post('/plan', async (req, res, next) => {
     }
     
     const plan = await agentService.createTaskPlan(goal, context);
-    res.json({ success: true, data: plan });
+    return res.json({ success: true, data: plan });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -25,9 +25,9 @@ router.post('/execute-plan', async (req, res, next) => {
     }
     
     const executedPlan = await agentService.executeTaskPlan(plan);
-    res.json({ success: true, data: executedPlan });
+    return res.json({ success: true, data: executedPlan });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -39,18 +39,18 @@ router.post('/execute-task', async (req, res, next) => {
     }
     
     const executedTask = await agentService.executeTask(task, context);
-    res.json({ success: true, data: executedTask });
+    return res.json({ success: true, data: executedTask });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
-router.get('/plans', async (req, res, next) => {
+router.get('/plans', async (_req, res, next) => {
   try {
     const plans = await agentService.getTaskPlans();
-    res.json({ success: true, data: plans });
+    return res.json({ success: true, data: plans });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -63,9 +63,9 @@ router.get('/plans/:id', async (req, res, next) => {
       return res.status(404).json({ success: false, error: 'Plan not found' });
     }
     
-    res.json({ success: true, data: plan });
+    return res.json({ success: true, data: plan });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -77,18 +77,18 @@ router.post('/plans', async (req, res, next) => {
     }
     
     await agentService.saveTaskPlan(plan);
-    res.json({ success: true, message: 'Plan saved successfully' });
+    return res.json({ success: true, message: 'Plan saved successfully' });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
-router.get('/context', async (req, res, next) => {
+router.get('/context', async (_req, res, next) => {
   try {
     const context = await agentService.getAgentContext();
-    res.json({ success: true, data: context });
+    return res.json({ success: true, data: context });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 

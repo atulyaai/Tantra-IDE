@@ -263,7 +263,8 @@ export async function analyzeNetworkRequests(url) {
             });
         });
         await page.goto(targetUrl);
-        await page.waitForLoadState('networkidle');
+        // Wait for page to load
+        await new Promise(resolve => setTimeout(resolve, 2000));
         await browser.close();
         return {
             requests,

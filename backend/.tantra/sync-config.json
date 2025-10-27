@@ -1,0 +1,7 @@
+{
+  "enabled": false,
+  "provider": "local",
+  "branch": "main",
+  "autoSync": true,
+  "syncInterval": 5
+}
