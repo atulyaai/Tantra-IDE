@@ -16,6 +16,11 @@ import searchRouter from './routes/search.js';
 import performanceRouter from './routes/performance.js';
 import databaseRouter from './routes/database.js';
 import agentRouter from './routes/agent.js';
+import pluginsRouter from './routes/plugins.js';
+import voiceRouter from './routes/voice.js';
+import cloudSyncRouter from './routes/cloudSync.js';
+import authRouter from './routes/auth.js';
+import debugRouter from './routes/debug.js';
 
 // Services
 import { setupTerminalHandlers } from './services/terminalService.js';
@@ -51,6 +56,11 @@ app.use('/api/search', searchRouter);
 app.use('/api/performance', performanceRouter);
 app.use('/api/database', databaseRouter);
 app.use('/api/agent', agentRouter);
+app.use('/api/plugins', pluginsRouter);
+app.use('/api/voice', voiceRouter);
+app.use('/api/cloud-sync', cloudSyncRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/debug', debugRouter);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
