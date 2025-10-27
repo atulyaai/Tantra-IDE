@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import Editor from '@monaco-editor/react';
 import { useEditorStore } from '../../stores/editorStore';
 import { useSettingsStore } from '../../stores/settingsStore';
 import { fileAPI } from '../../services/api';
+import { codeCompletionService } from '../../services/codeCompletionService';
 import { X, Save } from 'lucide-react';
 
 export default function MonacoEditor() {
@@ -16,6 +17,8 @@ export default function MonacoEditor() {
   const theme = useSettingsStore((state) => state.theme);
   const fontSize = useSettingsStore((state) => state.fontSize);
   const tabSize = useSettingsStore((state) => state.tabSize);
+  
+  const editorRef = useRef<any>(null);
 
   const activeTab = tabs.find(t => t.id === activeTabId);
 
@@ -44,6 +47,65 @@ export default function MonacoEditor() {
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [activeTab]);
+
+  const handleEditorDidMount = (editor: any, monaco: any) => {
+    editorRef.current = editor;
+    
+    // Register completion provider
+    monaco.languages.registerCompletionItemProvider('javascript', {
+      provideCompletionItems: async (model: any, position: any, context: any) => {
+        try {
+          const completions = await codeCompletionService.getCompletions(model, position, context);
+          return { suggestions: completions };
+        } catch (error) {
+          console.error('[MonacoEditor] Error getting completions:', error);
+          return { suggestions: [] };
+        }
+      }
+    });
+
+    // Register completion provider for TypeScript
+    monaco.languages.registerCompletionItemProvider('typescript', {
+      provideCompletionItems: async (model: any, position: any, context: any) => {
+        try {
+          const completions = await codeCompletionService.getCompletions(model, position, context);
+          return { suggestions: completions };
+        } catch (error) {
+          console.error('[MonacoEditor] Error getting completions:', error);
+          return { suggestions: [] };
+        }
+      }
+    });
+
+    // Register completion provider for Python
+    monaco.languages.registerCompletionItemProvider('python', {
+      provideCompletionItems: async (model: any, position: any, context: any) => {
+        try {
+          const completions = await codeCompletionService.getCompletions(model, position, context);
+          return { suggestions: completions };
+        } catch (error) {
+          console.error('[MonacoEditor] Error getting completions:', error);
+          return { suggestions: [] };
+        }
+      }
+    });
+
+    // Register completion provider for other languages
+    const languages = ['html', 'css', 'json', 'yaml', 'markdown', 'sql'];
+    languages.forEach(lang => {
+      monaco.languages.registerCompletionItemProvider(lang, {
+        provideCompletionItems: async (model: any, position: any, context: any) => {
+          try {
+            const completions = await codeCompletionService.getCompletions(model, position, context);
+            return { suggestions: completions };
+          } catch (error) {
+            console.error('[MonacoEditor] Error getting completions:', error);
+            return { suggestions: [] };
+          }
+        }
+      });
+    });
+  };
 
   return (
     <div className="h-full flex flex-col bg-background">
