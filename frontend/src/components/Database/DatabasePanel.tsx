@@ -1,17 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { databaseAPI } from '../../services/api';
 import { 
   Database, 
   Play, 
-  Plus, 
   Edit, 
-  Trash2, 
   CheckCircle, 
   XCircle, 
   Loader2,
   Table,
-  Eye,
   Settings
 } from 'lucide-react';
 
@@ -22,7 +19,7 @@ export default function DatabasePanel() {
   const [isExecuting, setIsExecuting] = useState(false);
   const [activeTab, setActiveTab] = useState('query');
 
-  const { data: connections, isLoading: connectionsLoading, refetch: refetchConnections } = useQuery({
+  const { data: connections, isLoading: connectionsLoading } = useQuery({
     queryKey: ['database-connections'],
     queryFn: () => databaseAPI.getConnections(),
   });

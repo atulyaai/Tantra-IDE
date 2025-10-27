@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { searchAPI } from '../../services/api';
 import { 
   Search, 
@@ -9,7 +8,6 @@ import {
   Package, 
   Github, 
   Globe,
-  ChevronDown,
   Loader2
 } from 'lucide-react';
 

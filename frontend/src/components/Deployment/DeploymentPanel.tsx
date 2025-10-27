@@ -8,7 +8,6 @@ import {
   Clock, 
   ExternalLink, 
   Download,
-  Settings,
   Play,
   History
 } from 'lucide-react';

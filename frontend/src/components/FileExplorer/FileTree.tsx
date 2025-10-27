@@ -19,7 +19,7 @@ export default function FileTree() {
     retryDelay: 1000, // Wait 1 second between retries
   });
 
-  const { data: gitStatus, error: gitError } = useQuery({
+  const { data: gitStatus } = useQuery({
     queryKey: ['git-status'],
     queryFn: () => gitAPI.status(),
     refetchInterval: 10000, // Refresh every 10 seconds

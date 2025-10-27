@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { FileNode as FileNodeType } from '../../types';
 import { useFileStore } from '../../stores/fileStore';
 import {
