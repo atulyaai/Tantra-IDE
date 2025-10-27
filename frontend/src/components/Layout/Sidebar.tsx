@@ -13,6 +13,7 @@ import {
   Database, 
   Zap,
   Bot,
+  Mic,
   Settings 
 } from 'lucide-react';
 
@@ -27,6 +28,7 @@ export default function Sidebar({ onPanelChange }: SidebarProps) {
   const tabs = [
     { id: 'files', label: 'Files', icon: FileText },
     { id: 'chat', label: 'AI Chat', icon: MessageSquare },
+    { id: 'voice', label: 'Voice', icon: Mic },
     { id: 'terminal', label: 'Terminal', icon: Terminal },
     { id: 'git', label: 'Git', icon: GitBranch },
     { id: 'packages', label: 'Packages', icon: Package },

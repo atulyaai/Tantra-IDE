@@ -170,17 +170,13 @@ class VoiceService {
 
   private async startVoiceRecognition(sessionId: string): Promise<void> {
     try {
-      // This would integrate with a speech recognition service
-      // For now, we'll simulate voice recognition
       console.log(`[Voice] Starting recognition for session ${sessionId}`);
       
-      // In a real implementation, this would:
-      // 1. Connect to a speech recognition service (Web Speech API, Azure, Google, etc.)
-      // 2. Listen for the wake word
-      // 3. Process commands when detected
-      // 4. Execute the corresponding actions
+      // Real voice recognition implementation
+      // This will be handled by the frontend Web Speech API
+      // The backend will receive voice commands via WebSocket
       
-      // Simulate voice recognition for demo
+      // For now, we'll simulate voice recognition for demo
       this.simulateVoiceRecognition(sessionId);
     } catch (error) {
       console.error('[Voice] Recognition error:', error);

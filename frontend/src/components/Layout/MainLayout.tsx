@@ -3,6 +3,7 @@ import Sidebar from './Sidebar';
 import FileExplorer from '../FileExplorer/FileTree';
 import MonacoEditor from '../Editor/MonacoEditor';
 import ChatPanel from '../AIAssistant/ChatPanel';
+import VoiceInterface from '../VoiceInterface/VoiceInterface';
 import TerminalPanel from '../Terminal/TerminalPanel';
 import MediaBrowser from '../MediaBrowser/MediaBrowser';
 import DeploymentPanel from '../Deployment/DeploymentPanel';
@@ -16,6 +17,7 @@ import { Menu, Code2, MessageSquare, Terminal, Settings } from 'lucide-react';
 // Panel configuration for better maintainability
 const PANEL_CONFIG = {
   files: { title: 'Explorer', component: FileExplorer },
+  voice: { title: 'Voice Interface', component: VoiceInterface },
   media: { title: 'Media Browser', component: MediaBrowser },
   git: { title: 'Git', component: null },
   packages: { title: 'Packages', component: null },
