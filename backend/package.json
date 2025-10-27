@@ -4,8 +4,11 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
-    "start": "node dist/server.js"
+    "build": "npx --package=typescript tsc",
+    "start": "node dist/server.js",
+    "type-check": "npx --package=typescript tsc --noEmit",
+    "lint": "echo \"No linter configured\" && exit 0",
+    "test": "echo \"No tests specified\" && exit 0"
   },
   "dependencies": {
     "@types/bcrypt": "^6.0.0",

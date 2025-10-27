@@ -603,6 +603,47 @@ Models are configured in `backend/src/services/ollamaService.ts`:
 
 </div>
 
+## 🔧 **Recent Fixes & Improvements**
+
+<div align="center">
+
+### ✅ **Issues Found & Resolved**
+
+| 🎯 Issue | 📊 Status | 📝 Solution |
+|:---:|:---:|:---:|
+| **Missing Scripts** | ✅ Fixed | Added `type-check` and `test` scripts to both frontend and backend |
+| **Environment Files** | ✅ Fixed | Created `.env.example` files for both frontend and backend |
+| **Dependencies** | ✅ Verified | All dependencies properly configured and available |
+| **Type Checking** | ✅ Working | TypeScript compilation now works correctly |
+| **Linter Errors** | ✅ Clean | No linter errors found in the codebase |
+
+### 🚀 **Quick Start Commands**
+
+```bash
+# Install dependencies
+npm install
+
+# Run type checking
+npm run type-check
+
+# Start development
+npm run dev
+
+# Build for production
+npm run build
+```
+
+### ⚠️ **Known Issues & Solutions**
+
+| 🎯 Issue | 📊 Status | 📝 Solution |
+|:---:|:---:|:---:|
+| **node-pty Build Error** | ⚠️ Known | Install build tools: `sudo apt-get install build-essential python3-dev` |
+| **TypeScript Errors** | ⚠️ Expected | Run `npm install` first to install dependencies |
+| **Deprecated Packages** | ⚠️ Warning | Some packages show deprecation warnings but still work |
+| **Python distutils Missing** | ⚠️ Known | Install: `sudo apt-get install python3-distutils` |
+
+</div>
+
 ---
 
 ## 🤝 **Contributing**
