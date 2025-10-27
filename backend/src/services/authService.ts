@@ -256,13 +256,13 @@ class AuthService {
     const token = jwt.sign(
       { userId, type: 'access' },
       this.config.jwtSecret,
-      { expiresIn: this.config.jwtExpiresIn }
+      { expiresIn: this.config.jwtExpiresIn } as any
     );
     
     const refreshToken = jwt.sign(
       { userId, type: 'refresh' },
       this.config.jwtSecret,
-      { expiresIn: this.config.refreshTokenExpiresIn }
+      { expiresIn: this.config.refreshTokenExpiresIn } as any
     );
     
     const session: AuthSession = {
@@ -354,7 +354,7 @@ class AuthService {
       const newToken = jwt.sign(
         { userId: session.userId, type: 'access' },
         this.config.jwtSecret,
-        { expiresIn: this.config.jwtExpiresIn }
+        { expiresIn: this.config.jwtExpiresIn } as any
       );
       
       session.token = newToken;

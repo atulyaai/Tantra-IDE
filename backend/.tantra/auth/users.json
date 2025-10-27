@@ -1,0 +1,22 @@
+[
+  {
+    "id": "77187c6a-c2ce-4d72-8798-4968f1d907e6",
+    "username": "admin",
+    "email": "admin@tantra-ide.dev",
+    "passwordHash": "$2b$12$ZefeDOJw7JAmfPY9ntAbF.bYkH0jz/RyorkO8JFyKaA08H/jI5zR2",
+    "role": "admin",
+    "permissions": [
+      "*"
+    ],
+    "createdAt": "2025-10-27T08:52:12.954Z",
+    "isActive": true,
+    "preferences": {
+      "theme": "dark",
+      "fontSize": 14,
+      "tabSize": 2,
+      "autoSave": true,
+      "notifications": true,
+      "language": "en"
+    }
+  }
+]

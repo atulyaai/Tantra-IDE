@@ -68,6 +68,7 @@ function parseDatabaseConfig(content, filename) {
                     id: `env-${Date.now()}`,
                     name: 'Environment Database',
                     ...connection,
+                    type: connection.type || 'sqlite',
                     status: 'disconnected',
                 });
             }
@@ -83,6 +84,7 @@ function parseDatabaseConfig(content, filename) {
                     id: `prisma-${Date.now()}`,
                     name: 'Prisma Database',
                     ...connection,
+                    type: connection.type || 'sqlite',
                     status: 'disconnected',
                 });
             }
