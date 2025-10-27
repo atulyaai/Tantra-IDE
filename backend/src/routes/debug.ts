@@ -16,9 +16,9 @@ router.post('/sessions', async (req, res, next) => {
     }
     
     const session = await debugService.createSession(name, type, config);
-    res.json({ success: true, data: session });
+    return res.json({ success: true, data: session });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -27,9 +27,9 @@ router.post('/sessions/:id/start', async (req, res, next) => {
   try {
     const { id } = req.params;
     await debugService.startSession(id);
-    res.json({ success: true, message: 'Debug session started' });
+    return res.json({ success: true, message: 'Debug session started' });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -38,9 +38,9 @@ router.post('/sessions/:id/stop', async (req, res, next) => {
   try {
     const { id } = req.params;
     await debugService.stopSession(id);
-    res.json({ success: true, message: 'Debug session stopped' });
+    return res.json({ success: true, message: 'Debug session stopped' });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -49,9 +49,9 @@ router.post('/sessions/:id/pause', async (req, res, next) => {
   try {
     const { id } = req.params;
     await debugService.pauseSession(id);
-    res.json({ success: true, message: 'Debug session paused' });
+    return res.json({ success: true, message: 'Debug session paused' });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -60,9 +60,9 @@ router.post('/sessions/:id/resume', async (req, res, next) => {
   try {
     const { id } = req.params;
     await debugService.resumeSession(id);
-    res.json({ success: true, message: 'Debug session resumed' });
+    return res.json({ success: true, message: 'Debug session resumed' });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -76,19 +76,19 @@ router.get('/sessions/:id', async (req, res, next) => {
       return res.status(404).json({ success: false, error: 'Debug session not found' });
     }
     
-    res.json({ success: true, data: session });
+    return res.json({ success: true, data: session });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
 // Get all debug sessions
-router.get('/sessions', async (req, res, next) => {
+router.get('/sessions', async (_req, res, next) => {
   try {
     const sessions = debugService.getAllSessions();
-    res.json({ success: true, data: sessions });
+    return res.json({ success: true, data: sessions });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -106,9 +106,9 @@ router.post('/sessions/:id/breakpoints', async (req, res, next) => {
     }
     
     const newBreakpoint = await debugService.addBreakpoint(id, breakpoint);
-    res.json({ success: true, data: newBreakpoint });
+    return res.json({ success: true, data: newBreakpoint });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -117,9 +117,9 @@ router.delete('/sessions/:id/breakpoints/:breakpointId', async (req, res, next) 
   try {
     const { id, breakpointId } = req.params;
     await debugService.removeBreakpoint(id, breakpointId);
-    res.json({ success: true, message: 'Breakpoint removed' });
+    return res.json({ success: true, message: 'Breakpoint removed' });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -130,9 +130,9 @@ router.put('/sessions/:id/breakpoints/:breakpointId', async (req, res, next) => 
     const updates = req.body;
     
     await debugService.updateBreakpoint(id, breakpointId, updates);
-    res.json({ success: true, message: 'Breakpoint updated' });
+    return res.json({ success: true, message: 'Breakpoint updated' });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -141,9 +141,9 @@ router.post('/sessions/:id/step-over', async (req, res, next) => {
   try {
     const { id } = req.params;
     await debugService.stepOver(id);
-    res.json({ success: true, message: 'Step over executed' });
+    return res.json({ success: true, message: 'Step over executed' });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -152,9 +152,9 @@ router.post('/sessions/:id/step-into', async (req, res, next) => {
   try {
     const { id } = req.params;
     await debugService.stepInto(id);
-    res.json({ success: true, message: 'Step into executed' });
+    return res.json({ success: true, message: 'Step into executed' });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -163,9 +163,9 @@ router.post('/sessions/:id/step-out', async (req, res, next) => {
   try {
     const { id } = req.params;
     await debugService.stepOut(id);
-    res.json({ success: true, message: 'Step out executed' });
+    return res.json({ success: true, message: 'Step out executed' });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -174,9 +174,9 @@ router.post('/sessions/:id/continue', async (req, res, next) => {
   try {
     const { id } = req.params;
     await debugService.continue(id);
-    res.json({ success: true, message: 'Continue executed' });
+    return res.json({ success: true, message: 'Continue executed' });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -194,9 +194,9 @@ router.post('/sessions/:id/evaluate', async (req, res, next) => {
     }
     
     const result = await debugService.evaluateExpression(id, expression);
-    res.json({ success: true, data: result });
+    return res.json({ success: true, data: result });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -207,9 +207,9 @@ router.get('/sessions/:id/variables', async (req, res, next) => {
     const { frameId } = req.query;
     
     const variables = await debugService.getVariables(id, frameId ? parseInt(frameId as string) : undefined);
-    res.json({ success: true, data: Array.from(variables.entries()) });
+    return res.json({ success: true, data: Array.from(variables.entries()) });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -218,9 +218,9 @@ router.get('/sessions/:id/call-stack', async (req, res, next) => {
   try {
     const { id } = req.params;
     const callStack = await debugService.getCallStack(id);
-    res.json({ success: true, data: callStack });
+    return res.json({ success: true, data: callStack });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -238,9 +238,9 @@ router.post('/sessions/:id/frame', async (req, res, next) => {
     }
     
     await debugService.setCurrentFrame(id, frameId);
-    res.json({ success: true, message: 'Current frame set' });
+    return res.json({ success: true, message: 'Current frame set' });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
