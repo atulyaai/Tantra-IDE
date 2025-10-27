@@ -130,7 +130,7 @@ export default function MainLayout() {
       {/* Main Content Area */}
       <div className="flex-1 flex overflow-hidden">
         {/* Sidebar */}
-        <Sidebar onPanelChange={setActiveLeftPanel} />
+        <Sidebar onPanelChange={(panelId) => setActiveLeftPanel(panelId as any)} />
         
         {/* Left Panel - Dynamic Content */}
         <div 

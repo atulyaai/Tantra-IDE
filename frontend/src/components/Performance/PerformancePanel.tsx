@@ -1,16 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { performanceAPI } from '../../services/api';
 import { 
   Zap, 
   BarChart3, 
-  Cpu, 
   HardDrive, 
   Network, 
   TrendingUp, 
   AlertTriangle,
   CheckCircle,
-  Clock,
   Download,
   Activity
 } from 'lucide-react';
