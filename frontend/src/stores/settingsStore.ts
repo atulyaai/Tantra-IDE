@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Settings } from '../types/index.js';
+import type { Settings } from '../types';
 
 interface SettingsState extends Settings {
   updateSettings: (settings: Partial<Settings>) => void;
